@@ -46,7 +46,7 @@ if st.button("コピー生成開始") and name_input:
             goal=f'商品名「{name_input}」のブランド価値と機能的特徴を、AIの知識と補足情報から抽出する',
             backstory='20年のEC運用経験を持つ専門家。商品名から即座にターゲット層と最大の魅力を特定するのが得意。',
             llm=llm,
-            tools=[product_web_research] if use_web_research else,
+            tools=[product_web_research] if use_web_research else [],
             max_iter=1,
             verbose=True
         )
