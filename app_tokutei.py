@@ -30,7 +30,7 @@ with col1:
     image_input = st.file_uploader("画像（背景削除用）", type=["jpg", "png", "jpeg"], key="inp_img")
 
 if st.button("コピー生成開始", key="btn_submit") and name_input:
-    agent_tools = [product_web_research] if use_web_research else
+    agent_tools = [product_web_research] if use_web_research else []
 
     # CrewAI v1.x ネイティブLLMクラスの定義 [4]
     native_llm = LLM(
