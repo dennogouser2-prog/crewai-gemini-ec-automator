@@ -1,4 +1,5 @@
 crewai==0.100.1
+firecrawl-py
 langchain-google-genai
 google-genai
 google-generativeai
