@@ -29,7 +29,7 @@ with col1:
 # --- 生成開始プロセス ---
 if st.button("コピー生成開始") and name_input:
     # ツールリストの安全な作成
-    agent_tools = [product_web_research] if use_web_research else
+    agent_tools = [product_web_research] if use_web_research else []
 
     # 【重要】CrewAI専用のLLMインスタンスを作成。これがValidationErrorの特効薬です 
     native_llm = LLM(
