@@ -38,7 +38,7 @@ with col1:
 # --- 生成開始直前でツールリストを明示的に作成 ---
 if st.button("コピー生成開始") and name_input:
     # ツールリストを変数として外に出すことで型エラーを防ぎます [1]
-    agent_tools =
+    agent_tools =[]
     if use_web_research:
         agent_tools = [product_web_research]
 
