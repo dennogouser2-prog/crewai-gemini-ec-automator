@@ -35,18 +35,20 @@ with col1:
     use_web_research = st.checkbox("WEB調査を実行する（より最新の情報が必要な場合のみON）", value=False)
     image_input = st.file_uploader("画像（背景削除・リサイズ用）", type=["jpg", "png", "jpeg"])
 
-# --- 生成開始 ---
+# --- 生成開始直前でツールリストを明示的に作成 ---
 if st.button("コピー生成開始") and name_input:
-    with st.spinner(f"AIが『{name_input}』の最適コピーを構成中..."):
-        
-        # 1. 商品特性を整理するエージェント
-        # 【修正の核心】elseの後に空のリスト を指定し、末尾のカンマを正しく配置しました
+    # ツールリストを変数として外に出すことで型エラーを防ぎます [1]
+    agent_tools =
+    if use_web_research:
+        agent_tools = [product_web_research]
+
+    with st.spinner(f"AIが作業中..."):
         analyst = Agent(
             role='商品スペシャリスト',
-            goal=f'商品名「{name_input}」のブランド価値と機能的特徴を、AIの知識と補足情報から抽出する',
-            backstory='20年のEC運用経験を持つ専門家。商品名から即座にターゲット層と最大の魅力を特定するのが得意。',
+            goal=f'商品名「{name_input}」からブランド価値と機能的特徴を整理する',
+            backstory='20年のEC運用経験を持つ専門家。',
             llm=llm,
-            tools=[product_web_research] if use_web_research else [],
+            tools=agent_tools, # 確定したリストを渡す
             max_iter=1,
             verbose=True
         )
