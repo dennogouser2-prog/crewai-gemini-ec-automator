@@ -1,0 +1,7 @@
+crewai
+langchain-google-genai
+firecrawl-py
+rembg[cpu]
+pillow
+streamlit
+python-dotenv
