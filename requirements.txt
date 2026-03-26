@@ -1,9 +1,8 @@
 crewai==0.100.1
-litellm==1.63.1
-langchain-google-genai==2.0.11
-google-genai==1.68.0
-google-generativeai==0.8.6
-rembg[cpu]==2.0.69
-pillow==12.1.1
-streamlit==1.55.0
-python-dotenv==1.2.2
+langchain-google-genai
+google-genai
+google-generativeai
+rembg[cpu]
+pillow
+streamlit
+python-dotenv
