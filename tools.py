@@ -3,9 +3,6 @@ from crewai.tools import tool
 from rembg import remove
 from PIL import Image
 from firecrawl import FirecrawlApp
-from dotenv import load_dotenv
-
-load_dotenv()
 
 @tool("background_removal_and_resize")
 def background_removal_and_resize(image_path: str):
@@ -13,17 +10,17 @@ def background_removal_and_resize(image_path: str):
     try:
         input_image = Image.open(image_path)
         output_image = remove(input_image)
+        # 白背景の作成と合成
         background = Image.new("RGBA", output_image.size, (255, 255, 255))
         combined = Image.alpha_composite(background, output_image).convert("RGB")
         output_path = f"processed_{os.path.basename(image_path)}"
         combined.save(output_path, "JPEG")
-        return f"画像処理が完了しました。保存先: {output_path}"
+        return f"画像処理完了: {output_path}"
     except Exception as e:
         return f"画像処理エラー: {str(e)}"
 
 @tool("product_web_research")
 def product_web_research(product_name: str):
-    """Firecrawlを使用して商品の特性、市場の評判、競合情報を調査します。"""
+    """Firecrawlを使用して商品の特性や市場の評判を調査します。"""
     app = FirecrawlApp(api_key=os.getenv("FIRECRAWL_API_KEY"))
-    search_result = app.search(product_name, params={'limit': 3})
-    return search_result
+    return app.search(product_name, params={'limit': 3})
