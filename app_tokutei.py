@@ -55,10 +55,13 @@ if st.button("コピー生成開始") and name_input:
 
     agent_tools = [product_web_research] if use_web_research else []
 
-    native_llm = LLM(
-        model=MODEL_NAME,
-        temperature=0.7
-    )
+# LLM
+native_llm = LLM(
+    model="gemini/gemini-2.5-flash",
+    api_key=google_api_key,
+    base_url="https://generativelanguage.googleapis.com/v1beta",
+    temperature=0.7
+)
 
     with st.spinner("AIが商品分析中..."):
 
