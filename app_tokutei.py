@@ -63,7 +63,7 @@ native_llm = LLM(
     temperature=0.7
 )
 
-    with st.spinner("AIが商品分析中..."):
+with st.spinner("AIが商品分析中..."):
 
         try:
             analyst = Agent(
