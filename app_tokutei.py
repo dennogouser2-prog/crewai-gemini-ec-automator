@@ -3,32 +3,24 @@ import os
 from crewai import Agent, Task, Crew, Process, LLM
 from tools import product_web_research, background_removal_and_resize
 
-# --- [最重要] AttributeErrorを解消する唯一の正しい書き方 ---
-# os.environ全体を書き換えらえず、特定のキーにのみ値を代入します
+# --- 【修正1】 道具箱を壊さない正しい書き方 ---
 os.environ = "NA"
 
 try:
-    # Streamlit CloudのSecretsからAPIキーを取得
+    # 昇格したTier 1のキーをSecretsから取得
     google_api_key = st.secrets.get("GOOGLE_API_KEY")
-    firecrawl_api_key = st.secrets.get("FIRECRAWL_API_KEY")
-    
     if not google_api_key:
-        st.error("🚨 Secretsに GOOGLE_API_KEY が設定されていません。")
+        st.error("🚨 Secretsに GOOGLE_API_KEY がありません。")
         st.stop()
-    
-    # Firecrawlのキーを環境変数にセット
-    if firecrawl_api_key:
-        os.environ = firecrawl_api_key
-        
 except Exception:
-    st.error("🚨 Streamlit Secretsの設定を確認してください。")
+    st.error("🚨 StreamlitのSecrets設定を確認してください。")
     st.stop()
 
-# 2026年現在の推奨モデル
+# 【修正2】 廃止された 1.5-flash は使わず 2.5 に固定
 MODEL_NAME = "gemini/gemini-2.5-flash"
 
 st.set_page_config(page_title="EC自動化エージェント", layout="wide")
-st.title("🚀 EC商品登録：CrewAI安定稼働環境")
+st.title("🚀 EC商品登録：CrewAI安定稼働版")
 
 col1, col2 = st.columns(2)
 with col1:
@@ -39,22 +31,21 @@ with col1:
     image_input = st.file_uploader("画像（背景削除）", type=["jpg", "png", "jpeg"], key="f_p_img")
 
 if st.button("コピー生成開始", key="f_p_submit") and name_input:
-    # ツールリストの安全な作成
-    agent_tools = [product_web_research] if use_web_research else [""]
+    # 【修正3】 else の後に [ ] (空のリスト) を確実に記述
+    agent_tools = [product_web_research] if use_web_research else []
 
-    # CrewAI v1.x ネイティブLLMクラスの定義
     native_llm = LLM(
         model=MODEL_NAME,
         api_key=google_api_key,
         temperature=1.0
     )
 
-    with st.spinner("AIエージェントが連携して作業中..."):
+    with st.spinner("AIが連携して作業中..."):
         try:
             analyst = Agent(
                 role='商品特性アナリスト',
-                goal=f'商品「{name_input}」の独自の魅力を特定する',
-                backstory='20年のEC運用経験に基づき、商品名からインサイトを抽出する専門家。',
+                goal=f'商品「{name_input}」の魅力を整理する',
+                backstory='20年のEC運用経験を持つ専門家。',
                 llm=native_llm,
                 tools=agent_tools,
                 max_iter=1,
@@ -63,15 +54,15 @@ if st.button("コピー生成開始", key="f_p_submit") and name_input:
 
             copywriter = Agent(
                 role='戦略的コピーライター',
-                goal='10, 20, 30, 50文字の4パターンで、クリック率を最大化するコピーを作る',
-                backstory='SEOタイトルの配置技術（前半15文字に重要キーワード）を熟知したプロ [1]。',
+                goal='文字数制限内でクリック率を最大化するコピーを作る',
+                backstory='SEOタイトル配置技術（前半15文字に重要キーワード）のプロ [2]。',
                 llm=native_llm,
                 max_iter=1,
                 verbose=True
             )
 
             task1 = Task(description=f"商品「{name_input}」を分析せよ", expected_output="詳細レポート", agent=analyst)
-            task2 = Task(description="指定文字数で4案のコピーを出せ", expected_output="4案のコピー（箇条書き）", agent=copywriter, context=[task1])
+            task2 = Task(description="10/20/30/50文字のコピー案を出せ", expected_output="4案のコピー", agent=copywriter, context=[task1])
 
             crew = Crew(agents=[analyst, copywriter], tasks=[task1, task2], process=Process.sequential)
             result = crew.kickoff()
@@ -90,4 +81,4 @@ if st.button("コピー生成開始", key="f_p_submit") and name_input:
                     if os.path.exists(processed_img):
                         st.image(processed_img, caption="背景削除済み画像")
         except Exception as e:
-            st.error(f"実行中にエラーが発生しました: {str(e)}")
+            st.error(f"実行エラー: {str(e)}")
