@@ -1,4 +1,4 @@
-crewai==0.100.1
+crewai==0.102.0
 firecrawl-py
 langchain-google-genai
 google-genai

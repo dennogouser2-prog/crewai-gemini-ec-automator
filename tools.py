@@ -10,7 +10,6 @@ def background_removal_and_resize(image_path: str):
     try:
         input_image = Image.open(image_path)
         output_image = remove(input_image)
-        # 白背景の作成と合成
         background = Image.new("RGBA", output_image.size, (255, 255, 255))
         combined = Image.alpha_composite(background, output_image).convert("RGB")
         output_path = f"processed_{os.path.basename(image_path)}"
@@ -21,6 +20,6 @@ def background_removal_and_resize(image_path: str):
 
 @tool("product_web_research")
 def product_web_research(product_name: str):
-    """Firecrawlを使用して商品の特性や市場の評判を調査します。"""
+    """Firecrawlを使用して商品の特性を調査します。"""
     app = FirecrawlApp(api_key=os.getenv("FIRECRAWL_API_KEY"))
     return app.search(product_name, params={'limit': 3})
