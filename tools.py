@@ -20,7 +20,7 @@ def background_removal_and_resize(image_path: str):
 
 @tool("product_web_research")
 def product_web_research(product_name: str):
-    """Firecrawlを使用して商品の特性や市場の評判を調査します。"""
+    """Firecrawlを使用して商品の特性を調査します。"""
     api_key = os.getenv("FIRECRAWL_API_KEY")
     if not api_key:
         return "Firecrawl APIキーが環境変数に見つかりません。"
