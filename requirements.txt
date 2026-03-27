@@ -1,9 +1,8 @@
 streamlit
 crewai
 crewai-tools
-litellm
 google-generativeai
 firecrawl-py
 rembg
 pillow
-onnxruntime
+python-dotenv
