@@ -40,7 +40,7 @@ with col1:
 
 if st.button("コピー生成開始", key="f_p_submit") and name_input:
     # ツールリストの安全な作成
-    agent_tools = [product_web_research] if use_web_research else []
+    agent_tools = [product_web_research] if use_web_research else [""]
 
     # CrewAI v1.x ネイティブLLMクラスの定義
     native_llm = LLM(
