@@ -1,8 +1,10 @@
-streamlit
-crewai
-crewai-tools
-google-generativeai
+crewai==0.102.0
 firecrawl-py
-rembg
+langchain-google-genai
+google-genai
+google-generativeai
+rembg[cpu]
+opencv-python-headless
 pillow
+streamlit
 python-dotenv
