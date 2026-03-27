@@ -22,6 +22,8 @@ except Exception:
 # 環境変数にAPIキー設定（重要）
 # ===============================
 os.environ["GOOGLE_API_KEY"] = google_api_key
+os.environ["GEMINI_API_KEY"] = google_api_key
+os.environ["GOOGLE_GENERATIVEAI_API_KEY"] = google_api_key
 if firecrawl_api_key:
     os.environ["FIRECRAWL_API_KEY"] = firecrawl_api_key
 
