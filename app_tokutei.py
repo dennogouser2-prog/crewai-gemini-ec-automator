@@ -4,7 +4,7 @@ from crewai import Agent, Task, Crew, Process, LLM
 from tools import product_web_research, background_removal_and_resize
 
 # --- 【修正1】 道具箱を壊さない正しい書き方 ---
-os.environ = "NA"
+os.environ = []
 
 try:
     # 昇格したTier 1のキーをSecretsから取得
