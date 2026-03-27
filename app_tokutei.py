@@ -27,7 +27,7 @@ if firecrawl_api_key:
 # LLM（LiteLLM経由 Gemini）
 # ===============================
 native_llm = LLM(
-    model="gemini/gemini-1.5-flash",
+    model="gemini/gemini-2.5-flash",
     api_key=google_api_key,
     temperature=0.7
 )
