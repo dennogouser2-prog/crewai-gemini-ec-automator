@@ -26,7 +26,7 @@ except Exception as e:
 # =========================
 # モデル
 # =========================
-MODEL_NAME = "gemini/gemini-2.0-flash"
+MODEL_NAME = "gemini/gemini-2.5-flash"
 
 
 # =========================
