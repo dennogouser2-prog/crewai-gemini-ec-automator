@@ -7,28 +7,26 @@ from tools import product_web_research, background_removal_and_resize
 # APIキー設定
 # =========================
 try:
-    google_api_key = st.secrets.get("GOOGLE_API_KEY")
+    google_api_key = st.secrets["GOOGLE_API_KEY"]
     firecrawl_api_key = st.secrets.get("FIRECRAWL_API_KEY")
 
-    if not google_api_key:
-        st.error("🚨 Streamlit Secretsに GOOGLE_API_KEY が設定されていません。")
-        st.stop()
-
-    # ★ここが最重要
+    # Gemini / LiteLLM 用（全部入れる）
     os.environ["GEMINI_API_KEY"] = google_api_key
+    os.environ["GOOGLE_API_KEY"] = google_api_key
+    os.environ["GOOGLE_GENERATIVEAI_API_KEY"] = google_api_key
 
     if firecrawl_api_key:
         os.environ["FIRECRAWL_API_KEY"] = firecrawl_api_key
 
-except Exception:
-    st.error("🚨 Secretsの設定を確認してください。")
+except Exception as e:
+    st.error(f"Secrets設定エラー: {str(e)}")
     st.stop()
 
 
 # =========================
 # モデル
 # =========================
-MODEL_NAME = "gemini/gemini-2.5-flash"
+MODEL_NAME = "gemini/gemini-2.0-flash"
 
 
 # =========================
@@ -44,7 +42,7 @@ with col1:
     name_input = st.text_input("商品名")
     manual_features = st.text_area("補足情報（任意）")
     use_web_research = st.checkbox("WEB調査を実行する", value=False)
-    image_input = st.file_uploader("画像（背景削除）", type=["jpg", "png", "jpeg"])
+    image_input = st.file_uploader("画像", type=["jpg", "png", "jpeg"])
 
 
 # =========================
@@ -56,39 +54,37 @@ if st.button("コピー生成開始") and name_input:
 
     native_llm = LLM(
         model=MODEL_NAME,
-        temperature=1.0
+        temperature=0.7
     )
 
-    with st.spinner("AIエージェントが連携して作業中..."):
+    with st.spinner("AIエージェント実行中..."):
         try:
             analyst = Agent(
-                role='商品特性アナリスト',
-                goal=f'商品「{name_input}」の独自の魅力を特定する',
-                backstory='EC分析の専門家',
+                role='商品分析',
+                goal=f'商品「{name_input}」の魅力を分析',
+                backstory='EC商品分析の専門家',
                 llm=native_llm,
                 tools=agent_tools,
-                max_iter=1,
                 verbose=True
             )
 
             copywriter = Agent(
-                role='戦略的コピーライター',
-                goal='売れるコピーを作る',
-                backstory='ECコピーライター',
+                role='コピーライター',
+                goal='売れるコピー作成',
+                backstory='ECコピー専門',
                 llm=native_llm,
-                max_iter=1,
                 verbose=True
             )
 
             task1 = Task(
-                description=f"商品「{name_input}」を分析せよ",
-                expected_output="詳細レポート",
+                description=f"{name_input} を分析",
+                expected_output="商品分析",
                 agent=analyst
             )
 
             task2 = Task(
-                description="ECサイト用のコピーを4案作成",
-                expected_output="4つのコピー案",
+                description="EC用コピーを4つ作成",
+                expected_output="コピー4案",
                 agent=copywriter,
                 context=[task1]
             )
@@ -101,10 +97,8 @@ if st.button("コピー生成開始") and name_input:
 
             result = crew.kickoff()
 
-            st.success("生成が完了しました！")
-
+            st.success("完了")
             with col2:
-                st.subheader("生成結果")
                 st.markdown(result.raw)
 
         except Exception as e:
