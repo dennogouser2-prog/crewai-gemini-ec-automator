@@ -5,28 +5,24 @@ from tools import product_web_research, background_removal_and_resize
 
 # --- [最重要] AttributeError対策 ---
 # 道具箱(os.environ)を壊さず、中にダミーキーを1つ入れる正しい記法です
-os.environ = "NA"
+#os.environ = "NA"
 
 try:
-    # Tier 1に昇格したAPIキーをSecretsから取得
-    google_api_key = st.secrets.get("GOOGLE_API_KEY")
+    google_api_key = st.secrets["GOOGLE_API_KEY"]
     firecrawl_api_key = st.secrets.get("FIRECRAWL_API_KEY")
-    
-        # Gemini / LiteLLM 用（全部入れる）
+
+    # Gemini / LiteLLM 用（全部入れる）
     os.environ["GEMINI_API_KEY"] = google_api_key
     os.environ["GOOGLE_API_KEY"] = google_api_key
     os.environ["GOOGLE_GENERATIVEAI_API_KEY"] = google_api_key
-    if not google_api_key:
-        st.error("🚨 Secretsに GOOGLE_API_KEY が設定されていません。")
-        st.stop()
-    
-    # Firecrawlのキーを環境変数にセット
+
     if firecrawl_api_key:
-        os.environ = firecrawl_api_key
-        
-except Exception:
-    st.error("🚨 Streamlit Secretsの設定を確認してください。")
+        os.environ["FIRECRAWL_API_KEY"] = firecrawl_api_key
+
+except Exception as e:
+    st.error(f"Secrets設定エラー: {str(e)}")
     st.stop()
+
 
 # 2026年3月現在の最新安定モデル
 MODEL_NAME = "gemini/gemini-2.5-flash"
