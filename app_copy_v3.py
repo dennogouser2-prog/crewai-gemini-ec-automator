@@ -86,7 +86,7 @@ if st.button("コピー生成開始", key="f_btn_submit") and name_input:
 
             task1 = Task(
                 description=f"商品「{name_input}」を分析せよ。補足：{manual_features}",
-                expected_output="商品のベネフィットをまとめたレポート",
+                expected_output="商品分析",
                 agent=analyst
             )
             
