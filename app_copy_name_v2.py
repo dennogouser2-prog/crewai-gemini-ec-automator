@@ -5,17 +5,16 @@ from tools2 import product_web_research, background_removal_and_resize
 
 # --- 【最重要修正】 道具箱を壊さず、適切にキーをセットします ---
 try:
-    # 昇格したTier 1のキーをSecretsから取得します 
-    google_api_key = st.secrets.get("GOOGLE_API_KEY")
+    google_api_key = st.secrets["GOOGLE_API_KEY"]
     firecrawl_api_key = st.secrets.get("FIRECRAWL_API_KEY")
-    
-    if not google_api_key:
-        st.error("🚨 Streamlit Secretsに GOOGLE_API_KEY が設定されていません。")
-        st.stop()
-        
-    # tools.pyから読み込めるよう環境変数にセット
+
+    # Gemini / LiteLLM 用（全部入れる）
+    os.environ["GEMINI_API_KEY"] = google_api_key
+    os.environ["GOOGLE_API_KEY"] = google_api_key
+    os.environ["GOOGLE_GENERATIVEAI_API_KEY"] = google_api_key
+
     if firecrawl_api_key:
-        os.environ = firecrawl_api_key
+        os.environ["FIRECRAWL_API_KEY"] = firecrawl_api_key
 
 except Exception as e:
     st.error(f"Secrets設定エラー: {str(e)}")
