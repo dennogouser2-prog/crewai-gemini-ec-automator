@@ -5,15 +5,15 @@ from tools2 import product_web_research, background_removal_and_resize
 
 # --- 【最重要修正】 道具箱を壊さず、適切にキーをセットします ---
 try:
-    google_api_key = st.secrets
+    # 昇格したTier 1のキーをSecretsから取得します 
+    google_api_key = st.secrets.get("GOOGLE_API_KEY")
     firecrawl_api_key = st.secrets.get("FIRECRAWL_API_KEY")
-
-    # システムが要求する環境変数をすべて網羅（辞書を壊さない [" "] 形式）
-    os.environ = google_api_key
-    os.environ = google_api_key
-    os.environ = google_api_key
-    os.environ = "NA" # バリデーション回避用のダミー
-
+    
+    if not google_api_key:
+        st.error("🚨 Streamlit Secretsに GOOGLE_API_KEY が設定されていません。")
+        st.stop()
+        
+    # tools.pyから読み込めるよう環境変数にセット
     if firecrawl_api_key:
         os.environ = firecrawl_api_key
 
