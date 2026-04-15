@@ -5,7 +5,7 @@ from tools import product_web_research, background_removal_and_resize
 
 # --- 【最重要修正】 道具箱を壊さず、中に部品を入れる正しい書き方 ---
 # os.environ自体に代入してはいけません。必ず以下の通り [" "] を使ってください。
-os.environ = "NA"
+#os.environ = "NA"
 
 try:
     # 昇格したTier 1のキーをSecretsから取得します 
