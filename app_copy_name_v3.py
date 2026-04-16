@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 from crewai import Agent, Task, Crew, Process, LLM
-from tools import product_web_research, background_removal_and_resize
+from tools3 import product_web_research, background_removal_and_resize
 
 # システム設定の整合性維持
 try:
@@ -18,7 +18,7 @@ try:
 except Exception as e:
     st.error(f"Secrets設定エラー: {str(e)}")
     st.stop()
-    
+
 MODEL_NAME = "gemini/gemini-2.5-flash"
 
 st.set_page_config(page_title="EC自動化エージェント", layout="wide")
