@@ -15,7 +15,10 @@ try:
 
     if firecrawl_api_key:
         os.environ["FIRECRAWL_API_KEY"] = firecrawl_api_key
-
+except Exception as e:
+    st.error(f"Secrets設定エラー: {str(e)}")
+    st.stop()
+    
 MODEL_NAME = "gemini/gemini-2.5-flash"
 
 st.set_page_config(page_title="EC自動化エージェント", layout="wide")
