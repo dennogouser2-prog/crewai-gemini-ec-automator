@@ -83,9 +83,14 @@ if st.button("コピー生成開始", key="p_submit_btn") and name_input:
                         text_color=selected_color
                     )
                     
-                    if "画像処理エラー" not in processed_path and os.path.exists(processed_path):
-                        st.image(processed_path, caption="加工済み画像（背景削除・文字合成）")
-                    else:
-                        st.error(processed_path)
+            # 画像処理後のセクションにクリーンアップを追加
+            if "画像処理エラー" not in processed_path and os.path.exists(processed_path):
+                st.image(processed_path, caption="加工済み画像（背景削除・文字合成）")
+                # 処理が終わったら一時ファイルを削除してストレージを守る
+                try:
+                    os.remove(img_path)
+                    os.remove(processed_path)
+                except:
+                    pass
         except Exception as e:
             st.error(f"実行エラー: {str(e)}")
