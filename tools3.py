@@ -30,7 +30,7 @@ def background_removal_and_resize(image_path: str, text: str = "", text_color: s
             color_hex = text_color.lstrip('#')
             rgb = tuple(int(color_hex[i:i+2], 16) for i in (0, 2, 4))
             bbox = draw.textbbox((0, 0), text, font=font)
-            text_w, text_h = bbox[1] - bbox[0], bbox[2] - bbox[3]
+            text_w, text_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
             x = (combined.width - text_w) // 2
             y = combined.height - text_h - 60
             draw.text((x, y), text, font=font, fill=rgb)
